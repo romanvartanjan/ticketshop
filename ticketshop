@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ticket-Shop</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
+      width: 100%;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    .ticket-info {
+      margin-bottom: 20px;
+    }
+    .ticket-info p {
+      margin: 5px 0;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+    label {
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    input {
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      padding: 10px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+    .confirmation {
+      display: none;
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #d4edda;
+      color: #155724;
+      border-radius: 4px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Ticket-Shop</h1>
+    <div class="ticket-info">
+      <p><strong>Verfügbare Plätze:</strong> <span id="available-tickets">200</span></p>
+      <p><strong>Preis pro Ticket:</strong> 25 €</p>
+      <p><strong>Beschreibung:</strong> Dies ist ein tolles Event mit Musik, Essen und guter Laune!</p>
+    </div>
+    <form id="ticket-form">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required>
+      <label for="email">E-Mail:</label>
+      <input type="email" id="email" name="email" required>
+      <label for="quantity">Anzahl der Tickets:</label>
+      <input type="number" id="quantity" name="quantity" min="1" max="200" required>
+      <button type="submit" id="buy-button">Jetzt kaufen</button>
+    </form>
+    <div id="confirmation" class="confirmation">
+      <p>Vielen Dank für Ihren Kauf! Eine Bestätigung wurde an Ihre E-Mail gesendet.</p>
+    </div>
+  </div>
+
+  <script>
+    let availableTickets = 200;
+    const ticketPrice = 25; // Preis pro Ticket in €
+
+    const form = document.getElementById('ticket-form');
+    const availableTicketsSpan = document.getElementById('available-tickets');
+    const buyButton = document.getElementById('buy-button');
+    const confirmation = document.getElementById('confirmation');
+
+    form.addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const quantity = parseInt(document.getElementById('quantity').value);
+
+      if (quantity > availableTickets) {
+        alert('Nicht genügend Tickets verfügbar!');
+        return;
+      }
+
+      // Simuliere Zahlung (hier PayPal-Link einfügen)
+      const totalPrice = quantity * ticketPrice;
+      const paypalLink = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=DEINE_PAYPAL_EMAIL&amount=${totalPrice}&currency_code=EUR&item_name=Ticket-Kauf`;
+
+      // Öffne PayPal in einem neuen Tab
+      window.open(paypalLink, '_blank');
+
+      // Aktualisiere verfügbare Tickets
+      availableTickets -= quantity;
+      availableTicketsSpan.textContent = availableTickets;
+
+      // Zeige Bestätigung an
+      confirmation.style.display = 'block';
+
+      // Deaktiviere Button, wenn keine Tickets mehr verfügbar sind
+      if (availableTickets === 0) {
+        buyButton.disabled = true;
+        buyButton.textContent = 'Ausverkauft';
+      }
+
+      // Formular zurücksetzen
+      form.reset();
+    });
+  </script>
+</body>
+</html>
